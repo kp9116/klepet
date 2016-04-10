@@ -88,17 +88,22 @@ $(document).ready(function() {
       }
     }
 
-    $('#seznam-kanalov div').click(function() {
+   $('#seznam-kanalov div').click(function() {
       klepetApp.procesirajUkaz('/pridruzitev ' + $(this).text());
       $('#poslji-sporocilo').focus();
     });
-  });
-
+  })
+  
   socket.on('uporabniki', function(uporabniki) {
     $('#seznam-uporabnikov').empty();
     for (var i=0; i < uporabniki.length; i++) {
       $('#seznam-uporabnikov').append(divElementEnostavniTekst(uporabniki[i]));
     }
+    
+   $('#seznam-uporabnikov div').click(function(){
+    $('#poslji-sporocilo').val('/zasebno ' + '"' +$(this).text()+ '"');
+      $('#poslji-sporocilo').focus();
+  })
   });
 
   setInterval(function() {
