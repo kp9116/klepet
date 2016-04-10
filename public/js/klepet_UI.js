@@ -53,13 +53,16 @@ $.get('/swearWords.txt', function(podatki) {
 function slika(vhod){
   var stevilo = (vhod.match(/http/gi) || []).length;
   var linki = [];
-  linki
-  console.log(stevilo);
-  vhod = vhod.replace(/https:/gi, '<img src="https:');
-  vhod = vhod.replace(/http:/gi, '<img src="http:');
-  vhod = vhod.replace(/jpg/gi, 'jpg" style="width:200px; height:auto; margin-left:20px;">');
-  vhod = vhod.replace(/png/gi, 'png" style="width:200px; height:auto; margin-left:20px;">');
-  vhod = vhod.replace(/gif/gi, 'gif" style="width:200px; height:auto; margin-left:20px;">');
+  linki = vhod.split(" ");
+  
+  vhod = "";
+  
+  for(var i=0; i<linki.length;i++){
+    if(linki[i].match(/^http.*(jpg|gif|png)$/)){
+      linki[i] = '<img src="'+ linki[i] + '"style="width:200px; height:auto; margin-left:20px;">';
+    }
+    vhod = vhod+linki[i];
+  }
   return vhod;
 }
 
