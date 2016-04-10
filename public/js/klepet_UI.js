@@ -1,9 +1,17 @@
 function divElementEnostavniTekst(sporocilo) {
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
+
   var jeSlika = (sporocilo.match(/img/gi) || []).length;
   
   if(jeSlika > 0){
     console.log("LEL");
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  }
+  
+
+  var jeVideo = (sporocilo.match(/youtube/)|| []).length;
+  
+  if(jeVideo > 0){
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   }
   
@@ -34,6 +42,7 @@ function procesirajVnosUporabnika(klepetApp, socket) {
   } else {
     sporocilo = filtirirajVulgarneBesede(sporocilo);
     sporocilo = slika(sporocilo);
+    sporocilo = videoposnetki(sporocilo);
     klepetApp.posljiSporocilo(trenutniKanal, sporocilo);
     $('#sporocila').append(divElementEnostavniTekst(sporocilo));
     $('#sporocila').scrollTop($('#sporocila').prop('scrollHeight'));
@@ -61,7 +70,7 @@ function slika(vhod){
     if(linki[i].match(/^http.*(jpg|gif|png)$/)){
       linki[i] = '<img src="'+ linki[i] + '"style="width:200px; height:auto; margin-left:20px;">';
     }
-    vhod = vhod+linki[i];
+    vhod = vhod+linki[i]+ " ";
   }
   return vhod;
 }
@@ -75,6 +84,24 @@ function filtirirajVulgarneBesede(vhod) {
         zamenjava = zamenjava + "*";
       return zamenjava;
     });
+  }
+  return vhod;
+}
+
+function videoposnetki(vhod){
+  var linki = [];
+  linki = vhod.split(" ");
+  
+  vhod = "";
+  var vzorec = /(?:https?:\/\/|www\.|m\.|^)youtu(?:be\.com\/watch\?(?:.*?&(?:amp;)?)?v=|\.be\/)([\w\-]+)(?:&(?:amp;)?[\w\?=]*)?/
+  
+  for(var i=0; i<linki.length;i++){
+    if(linki[i].match(vzorec)){
+      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+      var match = linki[i].match(regExp);
+      linki[i] = '<iframe src="https://www.youtube.com/embed/'+match[7]+'" allowfullscreen style="width:200px; height:150px; margin-left:20px;"></iframe>';;
+    }
+    vhod = vhod + linki[i] + " ";
   }
   return vhod;
 }
@@ -101,6 +128,9 @@ $(document).ready(function() {
   });
 
   socket.on('sporocilo', function (sporocilo) {
+    sporocilo.besedilo = filtirirajVulgarneBesede(sporocilo.besedilo);
+    sporocilo.besedilo = slika(sporocilo.besedilo);
+    sporocilo.besedilo = videoposnetki(sporocilo.besedilo);
     var novElement = divElementEnostavniTekst(sporocilo.besedilo);
     $('#sporocila').append(novElement);
   });
