@@ -79,14 +79,11 @@ $(document).ready(function() {
   });
   
   socket.on('dregljaj',function(rezultat){
-    var sporocilo;
-    if(rezultat.dregljaj){
-      sporocilo = "EJGA DEJ SE ZBUD NE!";
-    }else{
-      sporocilo = "neuspesno";
-    }
-    var novElement = divElementEnostavniTekst(sporocilo);
-    $('#sporocila').append(novElement);
+    var demoTimeout;
+    $('#sporocila').jrumble();
+    $('#sporocila').trigger('startRumble');
+    clearTimeout(demoTimeout);
+    demoTimeout = setTimeout(function(){$('#sporocila').trigger('stopRumble');;}, 1500);
   })
   
   socket.on('kanali', function(kanali) {
