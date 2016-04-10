@@ -52,6 +52,23 @@ function filtirirajVulgarneBesede(vhod) {
   return vhod;
 }
 
+function videoposnetki(vhod){
+  var linki = [];
+  linki = vhod.split(" ");
+  
+  vhod = "";
+  var pattern = /(?:https?:\/\/|www\.|m\.|^)youtu(?:be\.com\/watch\?(?:.*?&(?:amp;)?)?v=|\.be\/)([\w\-]+)(?:&(?:amp;)?[\w\?=]*)?/
+  for(var i=0; linki.length; i++){
+    if(linki[i].match(pattern)){
+      var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      var match = linki[i].match(regExp);
+      linki[i] = '<iframe src="https://www.youtube.com/embed/'+match[2]+'" allowfullscreen></iframe>';
+    }
+    vhod = vhod + linki[i];
+  }
+  return vhod;
+}
+
 $(document).ready(function() {
   var klepetApp = new Klepet(socket);
 
