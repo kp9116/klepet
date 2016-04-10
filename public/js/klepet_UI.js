@@ -4,7 +4,6 @@ function divElementEnostavniTekst(sporocilo) {
   var jeSlika = (sporocilo.match(/img/gi) || []).length;
   
   if(jeSlika > 0){
-    console.log("LEL");
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   }
   
