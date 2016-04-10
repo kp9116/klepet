@@ -135,6 +135,14 @@ $(document).ready(function() {
     $('#sporocila').append(novElement);
   });
   
+  socket.on('dregljaj',function(rezultat){
+    var demoTimeout;
+    $('#sporocila').jrumble();
+    $('#sporocila').trigger('startRumble');
+    clearTimeout(demoTimeout);
+    demoTimeout = setTimeout(function(){$('#sporocila').trigger('stopRumble');;}, 1500);
+  })
+  
   socket.on('kanali', function(kanali) {
     $('#seznam-kanalov').empty();
 
