@@ -78,6 +78,17 @@ $(document).ready(function() {
     $('#sporocila').append(novElement);
   });
   
+  socket.on('dregljaj',function(rezultat){
+    var sporocilo;
+    if(rezultat.dregljaj){
+      sporocilo = "EJGA DEJ SE ZBUD NE!";
+    }else{
+      sporocilo = "neuspesno";
+    }
+    var novElement = divElementEnostavniTekst(sporocilo);
+    $('#sporocila').append(novElement);
+  })
+  
   socket.on('kanali', function(kanali) {
     $('#seznam-kanalov').empty();
 
